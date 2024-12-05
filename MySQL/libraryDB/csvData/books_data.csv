@@ -1,0 +1,9 @@
+Book_Id,Book_Name,Year,Max_Time,Pages,Faculty
+1111,Database Systems,1998,7,348,CS
+1112,Database Systems,1998,14,347,CS
+1113,Database Systems,2001,7,424,CS
+2222,Database And Knowledge,1998,1,390,CS
+2223,Database And Knowledge,1998,7,390,EE
+3333,Electronic Circuits,1998,21,180,EE
+4444,Genes 7,1985,7,580,MED
+5555,Anatomy,1988,7,450,MED
