@@ -1,4 +1,4 @@
-Book_Id,Book_Name,Year,Max_Time,Pages,Faculty
+Book_id,Book_name,Year,Max_Time,Pages,Faculty
 1111,Database Systems,1998,7,348,CS
 1112,Database Systems,1998,14,347,CS
 1113,Database Systems,2001,7,424,CS
