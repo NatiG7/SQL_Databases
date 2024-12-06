@@ -67,5 +67,16 @@ echo "Query : [ SELECT Book_name FROM Books WHERE Book_name LIKE '__t%'; ]"
 BOOK_NAMES_THIRD_CHAR_S="SELECT Book_name FROM Books WHERE Book_name LIKE '__t%';"
 $MYSQL_QUERY -e "$BOOK_NAMES_THIRD_CHAR_S"
 
+echo -e "Show books that are not returned as Book returned column"
+echo "Query : [ SELECT book_id, COALESCE(To_Date, "Not Returned") "Book Returned ?" From Borrowed; ]"
+BOOKS_THAT_NOT_RETURNED="SELECT book_id, COALESCE(To_Date, 'Not Returned') 'Book Returned ?' From Borrowed;"
+$MYSQL_QUERY -e "$BOOKS_THAT_NOT_RETURNED"
+
+echo -e ""
+echo "Query : []"
+
+echo -e ""
+echo "Query : []"
+
 echo -e ""
 echo "Query : []"
