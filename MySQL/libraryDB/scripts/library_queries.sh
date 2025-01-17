@@ -127,6 +127,114 @@ echo "Query : [ SELECT DISTINCT(Book_name) FROM Books; ]"
 BOOK_NAMES_IN_LIBRARY="SELECT DISTINCT(Book_name) FROM Books;"
 $MYSQL_QUERY -e "$BOOK_NAMES_IN_LIBRARY"
 
+echo -e "Show years and all their books published"
+echo "Query : [ SELECT Year,Count(Book_id) FROM Books GROUP BY Year; ]"
+YEARS_AND_THEIR_BOOKS="SELECT Year,Count(Book_id) FROM Books GROUP BY Year;"
+$MYSQL_QUERY -e "$YEARS_AND_THEIR_BOOKS"
+
+echo -e "Show number of books grouped by faculty"
+echo "Query : [ SELECT Faculty,COUNT(Book_id) FROM Books GROUP BY Faculty; ]"
+NUMBER_BOOKS_BY_FACULTY="SELECT Faculty,COUNT(Book_id) FROM Books GROUP BY Faculty;"
+$MYSQL_QUERY -e "$NUMBER_BOOKS_BY_FACULTY"
+
+echo -e " Show avg num of pages on books grouped by year"
+echo "Query : [ SELECT Year,AVG(Pages) FROM Books GROUP BY Year; ]"
+AVG_PAGES_BY_YEAR="SELECT Year,AVG(Pages) FROM Books GROUP BY Year;"
+$MYSQL_QUERY -e "$AVG_PAGES_BY_YEAR"
+
+echo -e "Show  number of students grouped by faculty"
+echo "Query : [ SELECT Faculty,COUNT(Cust_name) FROM Customers GROUP BY Faculty; ]"
+NUM_STUDENTS_BY_FAC="SELECT Faculty,COUNT(Cust_name) FROM Customers GROUP BY Faculty; "
+$MYSQL_QUERY -e "$NUM_STUDENTS_BY_FAC"
+
+echo -e " Show number of books and times borrowed"
+echo "Query : [ SELECT Book_id,COUNT(*) FROM Borrowed GROUP BY Book_id; ]"
+BOOKS_AND_NUMBER_BORROWED="SELECT Book_id,COUNT(*) AS 'Times Borrowed' FROM Borrowed GROUP BY Book_id;"
+$MYSQL_QUERY -e "$BOOKS_AND_NUMBER_BORROWED"
+
+echo -e " Show book names that were borrowed and contain substring 'Sy' "
+echo "Query : [ SELECT Book_name FROM Books,Borrowed WHERE Books.Book_id = Borrowed.Book_id AND Book_name LIKE '%Sy%'; ]"
+BORROWED_CONTAIN_SY_NAMES="SELECT Book_name FROM Books,Borrowed WHERE Books.Book_id = Borrowed.Book_id AND Book_name LIKE '%Sy%';"
+$MYSQL_QUERY -e "$BORROWED_CONTAIN_SY_NAMES"
+
+echo -e " Other variation, using INNER JOIN Books and Borrowed on Book_id "
+BORROWED_CONTAIN_SY_NAMES_INNER_JOIN="SELECT Book_name FROM Books INNER JOIN Borrowed ON Books.Book_id = Borrowed.Book_id WHERE Book_name LIKE '%Sy';"
+$MYSQL_QUERY -e "$BORROWED_CONTAIN_SY_NAMES_INNER_JOIN"
+
+echo -e "Show borrowed book names and calculate return times"
+echo "Query : [ SELECT Book_name,ADDDATE(From_date, INTERVAL Books.Max_time DAY) FROM Books INNER JOIN Borrowed ON Books.Book_id = Borrowed.Book_id; ]"
+BORROWED_BOOKS_AND_RETURN_TIMES="SELECT Book_name,ADDDATE(From_date, INTERVAL Books.Max_time DAY) FROM Books INNER JOIN Borrowed ON Books.Book_id = Borrowed.Book_id;"
+$MYSQL_QUERY -e "$BORROWED_BOOKS_AND_RETURN_TIMES"
+
+echo -e "Show names and amount of pages borrowed by those names"
+echo "Query : [ SELECT Cust_name,SUM(Books.Pages) AS Pages_borrowed FROM Customers INNER JOIN Borrowed ON Customers.Cust_id = Borrowed.Cust_id INNER JOIN Books ON Books.Book_id = Borrowed.Book_id; ]"
+NAMES_AND_PAGES_BORROWED="SELECT Cust_name,SUM(Books.Pages) AS Pages_borrowed FROM Customers INNER JOIN Borrowed ON Customers.Cust_id = Borrowed.Cust_id INNER JOIN Books ON Books.Book_id = Borrowed.Book_id;"
+$MYSQL_QUERY -e "$NAMES_AND_PAGES_BORROWED"
+
+echo -e "Show book names that their publishing year is bigger than the average of publishing year in CS faculty"
+echo "Query : [ SELECT Book_name FROM Books WHERE Year < (SELECT AVG(Year) FROM Books WHERE Faculty = 'CS'); ]"
+PUBLISH_YEAR_BIGGER_THAT_AVG_CS="SELECT Book_name FROM Books WHERE Year < (SELECT AVG(Year) FROM Books WHERE Faculty = 'CS');"
+$MYSQL_QUERY -e "$PUBLISH_YEAR_BIGGER_THAT_AVG_CS"
+
+echo -e "Show customer names that ordered books from CS"
+echo "Query : [ SELECT DISTINCT Cust_name FROM Customers Where Cust_id = ALL(SELECT Cust_id FROM Ordered WHERE Customers.Cust_id = Ordered.Cust_id); ]"
+CUSTOMERS_THAT_ORDERED_FROM_CS="SELECT DISTINCT Cust_name FROM Customers Where Cust_id = ALL(SELECT Cust_id FROM Ordered WHERE Customers.Cust_id = Ordered.Cust_id);"
+$MYSQL_QUERY -e "$CUSTOMERS_THAT_ORDERED_FROM_CS"
+
+echo -e " Show faculty names where max pages is bigger than min pages in faculties"
+echo "Query : [ SELECT Faculty FROM Books GROUP BY Faculty HAVING MAX(Pages) > (SELECT MIN(Pages) FROM Books); ]"
+FACULTIES_WHERE_MAXPAGES_BIGGER_MINPAGES="SELECT Faculty FROM Books GROUP BY Faculty HAVING MAX(Pages) > (SELECT MIN(Pages) FROM Books);"
+$MYSQL_QUERY -e "$FACULTIES_WHERE_MAXPAGES_BIGGER_MINPAGES"
+
+echo -e " Show book names that were ordered"
+echo "Query : [ SELECT Book_name FROM Books WHERE Book_id IN (SELECT Book_id FROM Ordered); ]"
+BOOK_NAMES_IN_ORDERED="SELECT Book_name FROM Books WHERE Book_id IN (SELECT Book_id FROM Ordered);"
+$MYSQL_QUERY -e "$BOOK_NAMES_IN_ORDERED"
+
+echo -e "\nQuery to update all books in CS, set max time = 14"
+echo "Query : [ UPDATE Books SET Max_Time=14 WHERE Faculty = 'CS';  ]"
+
+echo -e "\nQuery to update max time of anatomy book to 21"
+echo "Query : [ UPDATE Books SET Max_Time=21 WHERE Book_name = 'Anatomy'; ]"
+
+echo -e "\nQuery to update faculty to CS to all customers containing 'ar' "
+echo "Query : [ UPDATE Customers SET Faculty = 'CS' WHERE Cust_name LIKE '%ar%'; ]"
+
+echo -e "\nQuery to add 10 pages to all pages in Faculty MED"
+echo "Query : [ UPDATE Books SET Pages = Pages + 10 WHERE Faculty = 'MED'; ]"
+
+echo -e "\nQuery to add 3 borrow days to books containing substring 'System' "
+echo "Query : [ UPDATE Books SET Max_Time = Max_Time + 3 WHERE Book_name LIKE '%System%'; ]"
+
+echo -e "\nQuery to insert a new customer"
+echo "Query : [ INSERT INTO Customers VALUES(555666777,'Some Customer', 'PP'); ]"
+INSERT_NEW_CUSTOMER="INSERT INTO Customers VALUES(555666777,'Some Customer', 'PP');"
+$MYSQL_QUERY -e "$INSERT_NEW_CUSTOMER"
+$MYSQL_QUERY -e "SELECT * FROM Customers;"
+
+echo -e "\nQuery to delete that customer 'Some Customer' "
+echo "Query : [ DELETE FROM Customers WHERE Faculty = 'PP'; ]"
+DELETE_NEW_CUSTOMER="DELETE FROM Customers WHERE Faculty = 'PP';"
+$MYSQL_QUERY -e "$DELETE_NEW_CUSTOMER"
+$MYSQL_QUERY -e "SELECT * FROM Customers;"
+
+echo -e "\nQuery to delete books that were never ordered."
+echo "Query : [ DELETE FROM Books WHERE NOT EXISTS(SELECT * FROM Ordered WHERE Books.Book_id = Ordered.Book_id); ]"
+$MYSQL_QUERY -e "SELECT * FROM Books WHERE NOT EXISTS(SELECT * FROM Ordered WHERE Books.Book_id = Ordered.Book_id);"
+
+
+echo -e ""
+echo "Query : []"
+
+echo -e ""
+echo "Query : []"
+
+echo -e ""
+echo "Query : []"
+
+echo -e ""
+echo "Query : []"
+
 echo -e ""
 echo "Query : []"
 

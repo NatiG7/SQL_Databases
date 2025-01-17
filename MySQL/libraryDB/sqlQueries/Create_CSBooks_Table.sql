@@ -1,0 +1,7 @@
+CREATE TABLE CSBooks AS
+FILETABLE SELECT Book_Id, Book_Name
+FROM Books
+WHERE
+    Faculty = 'CS';
+
+-- THIS IS A BAD PRACTICE
