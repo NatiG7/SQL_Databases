@@ -223,12 +223,16 @@ echo "Query : [ DELETE FROM Books WHERE NOT EXISTS(SELECT * FROM Ordered WHERE B
 $MYSQL_QUERY -e "SELECT * FROM Books WHERE NOT EXISTS(SELECT * FROM Ordered WHERE Books.Book_id = Ordered.Book_id);"
 
 
-echo -e ""
-echo "Query : []"
+echo -e "\nQuery to create a view where you can see details of CS students"
+echo "Query : [ CREATE VIEW CSStudents AS SELECT * FROM Customers WHERE Faculty = 'CS'; ]"
 
-echo -e ""
-echo "Query : []"
-
+echo -e "\nQuery to create a view where you can see books ordered by students in CS"
+echo "Query : [ CREATE VIEW CSBooks AS SELECT * FROM Books WHERE Book_id
+                    IN(SELECT Book_id FROM Ordered WHERE Cust_id
+                        IN(SELECT Cust_id FROM Customers WHERE Faculty = 'CS')); ]"
+$MYSQL_QUERY -e "CREATE VIEW CSBooks AS SELECT * FROM Books WHERE Book_id
+                    IN(SELECT Book_id FROM Ordered WHERE Cust_id
+                        IN(SELECT Cust_id FROM Customers WHERE Faculty = 'CS')); "
 echo -e ""
 echo "Query : []"
 
